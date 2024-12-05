@@ -12,7 +12,8 @@ springdoc:
     path: /swagger-ui.html
 spring:
   datasource:
-    url: jdbc:postgresql://posgres_database:5432/postgres
+    url: jdbc:postgresql://posgres_database:5432/postgres #server run inside container
+    #url: jdbc:postgresql://localhost:6600/postgres #server run outside of container
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -22,4 +23,11 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   flyway:
     enabled: true
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+        boot:
+          autoconfigure: INFO
 

@@ -1,20 +1,22 @@
 services:
-    # frontend:
-    #     build:
-    #         context: ./frontend
-    #         dockerfile: ../docker/frontend/Dockerfile
-    #     container_name: frontend
-    #     entrypoint: "sh -c 'yarn install && yarn dev'"
-    #     environment:
-    #         CHOKIDAR_USEPOLLING: 'true'
-    #     env_file:
-    #         - ./frontend/.env
-    #     depends_on:
-    #         - backend
-    #     ports:
-    #         - '6500:6500'
-    #     volumes:
-    #         - './frontend:/app'
+    frontend:
+        build:
+            context: ./frontend
+            dockerfile: ../docker/frontend/Dockerfile
+        container_name: frontend
+        environment:
+            CHOKIDAR_USEPOLLING: 'true'
+            NODE_ENV: dev
+        entrypoint: "sh -c 'ng serve --host 0.0.0.0 --poll 50'"
+        depends_on:
+            - backend
+        networks:
+            - fullstack
+        ports:
+            - '6500:4200'
+            - '49153:49153'
+        volumes:
+            - './frontend:/app:cached'
 
     backend:
         build:
@@ -25,6 +27,7 @@ services:
         restart: unless-stopped
         ports:
             - '6501:6501'
+            - '35729:35729'
         networks:
             - fullstack
         depends_on:
