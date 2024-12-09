@@ -1,0 +1,50 @@
+.lobby {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    box-sizing: border-box;
+    width: 100vw;
+}
+
+.lobby h2 {
+    margin: 0 0 20px 10px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.user-slots {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+    margin: auto 0;
+}
+
+.user-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    gap: 8px;
+    width: 100%;
+    padding: 10px;
+}
+
+.user-slot select {
+    width: 90%;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.user-slot select:disabled {
+    cursor: default;
+}
+
+.ready-button {
+    display: block;
+    margin: 30vh auto 0 auto;
+    width: 25%;
+}

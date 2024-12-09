@@ -4,6 +4,8 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.Getter;
 
+
+// TODO: Custom validator for checking whether username exist and passwords are matching
 @Data
 @Getter
 public class RegisterRequestDto {

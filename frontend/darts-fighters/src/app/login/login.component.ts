@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Login } from './model/login.model';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +13,7 @@ import { AuthService } from '../services/auth.service';
 export class LoginComponent {
   @Input() login: Login;
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private router: Router) {
     this.login = new Login();
   }
 
@@ -21,7 +22,7 @@ export class LoginComponent {
       next: (response) => {
         localStorage.removeItem('token');
         localStorage.setItem('token', response["jwt-token"])
-        window.location.href = '/menu';
+        this.router.navigate(['/menu']);
       },
       error: (error) => {
         console.error('Error occurred:', error);

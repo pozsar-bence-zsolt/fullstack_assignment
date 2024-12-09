@@ -78,6 +78,11 @@ button:hover {
     background-color: #0056b3;
 }
 
+.active {
+    background-color: #1136d8;
+}
+
+
 .redirect-form {
     text-align: right;
     margin-bottom: 10px;

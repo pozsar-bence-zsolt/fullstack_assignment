@@ -10,6 +10,7 @@ import { Login } from '../login/model/login.model';
 export class AuthService {
   private loginUrl = 'api/login';
   private registerUrl = 'api/register';
+  private meUrl = 'api/me';
 
   constructor(private http: HttpClient) { }
 
@@ -21,5 +22,10 @@ export class AuthService {
   sendLogin(login: Login): Observable<any> {
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
     return this.http.post(this.loginUrl, login, { headers });
+  }
+
+  getMe(): Observable<any> {
+    const headers = new HttpHeaders();
+    return this.http.get(this.meUrl, { headers });
   }
 }

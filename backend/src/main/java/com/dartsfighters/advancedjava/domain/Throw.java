@@ -27,7 +27,7 @@ public class Throw {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "game_id")
+    @JoinColumn(name = "row_id")
     private Row row;
 
     @Column(name = "dart_number", nullable = false)

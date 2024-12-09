@@ -1,5 +1,6 @@
 package com.dartsfighters.advancedjava.controller;
 
+import java.security.Principal;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -61,4 +63,14 @@ public class AuthenticationController {
         }
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<Map<String, String>> profile(Principal principal){
+        Map<String, String> response = new HashMap<>();
+        String username = principal.getName();
+        User user = this.userRepository.findByUsername(username).get();
+        response.put("userId", user.getId().toString());
+        response.put("username", username);
+        response.put("role", user.getRole());
+        return ResponseEntity.ok(response);
+    }
 }
