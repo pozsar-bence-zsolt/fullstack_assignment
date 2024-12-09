@@ -15,6 +15,7 @@ export class GameComponent {
   console = console;
   activePlayer: number = 0;
   currentRound: number = 0;
+  currentDart: number = 0;
   multiplier: number = 1;
   gameId: string = '';
   game: Game = new Game();
@@ -29,7 +30,7 @@ export class GameComponent {
     this.game.id = response.game.id;
     this.game.rows = response.game.rows;
     this.game.players = Object.entries(response.game.players).map(elem => ({id: elem[0], username: elem[1]}) )
-    console.log(this.game);
+    this.refreshCurrents();
   }
 
   toggleMultiplier(multiplier: number) {
@@ -37,20 +38,7 @@ export class GameComponent {
   }
 
   addScore() {
-    // if (this.currentThrow <= 0) return;
-
-    // const player = this.players[this.activePlayer];
-    // if (!this.scores[player][this.currentRound]) {
-    //   this.scores[player][this.currentRound] = [];
-    // }
-
-    // this.scores[player][this.currentRound].push(this.currentThrow * this.multiplier);
-
-    // if (this.scores[player][this.currentRound].length === 3) {
-    //   this.nextTurn();
-    // }
-
-    // this.currentThrow = 0;
+    
   }
 
   nextTurn() {
@@ -65,11 +53,26 @@ export class GameComponent {
     // }
   }
 
+  refreshCurrents() {
+    let found = false;
+    for (let i=0; i < this.game.rows.length; i++) {
+      for (let j=0; j < this.game.rows[i].throwsList.length; j++) {
+        const uthrow = this.game.rows[i].throwsList[j];
+        if (uthrow.score == -1 && !found) {
+          found = true;
+          this.currentDart = uthrow.dartNumber;
+          this.currentRound = j;
+          this.activePlayer = uthrow.userId;
+        }
+      }
+    }
+  }
+
   sumScores(player: number, round: number): number {
     let sum = 0;
     this.game.rows[round].throwsList?.forEach((value) => {
       if (value.userId == player) {
-        sum += value.score ?? 0;
+        sum += value.score && value.score > 0 ? value.score : 0;
       }
     });
     return sum;

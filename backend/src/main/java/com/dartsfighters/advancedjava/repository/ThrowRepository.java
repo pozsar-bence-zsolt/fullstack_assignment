@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.dartsfighters.advancedjava.domain.Throw;
 
 public interface ThrowRepository extends JpaRepository<Throw, Integer> {
-    List<Throw> findByRowId(Integer rowId);
+    List<Throw> findByRowIdOrderByDartNumber(Integer rowId);
 }

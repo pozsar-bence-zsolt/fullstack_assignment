@@ -95,7 +95,7 @@ public class GameController {
 
         for (Row row : rows) {
             List<ThrowDto> throwDtos = new ArrayList<>();
-            List<Throw> uthrows = this.throwRepository.findByRowId(row.getId());
+            List<Throw> uthrows = this.throwRepository.findByRowIdOrderByDartNumber(row.getId());
             for (Throw uthrow : uthrows) {
                 Integer player = uthrow.getThrower().getId();
                 ThrowDto throwDto = new ThrowDto(uthrow.getDartNumber(), uthrow.getScore(), player);
