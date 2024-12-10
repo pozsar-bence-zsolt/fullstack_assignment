@@ -29,7 +29,7 @@ public class Game {
     private Integer id;
 
     @Column
-    private LocalDateTime starTime;
+    private LocalDateTime startTime;
 
     @Column
     private LocalDateTime endTime;

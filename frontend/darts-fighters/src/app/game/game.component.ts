@@ -2,8 +2,10 @@ import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { GameService } from '../services/game.service';
 import { ActivatedRoute } from '@angular/router';
-import { Game } from './model/game.model';
+import { Game, Player } from './model/game.model';
 import { firstValueFrom } from 'rxjs';
+import { Row } from './model/row.model';
+import { ThrowModel } from './model/throw.model';
 
 @Component({
   selector: 'app-game',
@@ -14,8 +16,9 @@ import { firstValueFrom } from 'rxjs';
 export class GameComponent {
   console = console;
   activePlayer: number = 0;
-  currentRound: number = 0;
-  currentDart: number = 0;
+  currentRound: number = 1;
+  currentDart: number = 1;
+  currentThrowId: number = 0;
   multiplier: number = 1;
   gameId: string = '';
   game: Game = new Game();
@@ -26,10 +29,32 @@ export class GameComponent {
   }
 
   async ngOnInit() {
+    this.getState();
+  }
+
+  async getState() {
     const response = await firstValueFrom(this.gameService.getGame(this.gameId));
     this.game.id = response.game.id;
+    this.game.players = Object.entries(response.game.players).map(elem => ({id: parseInt(elem[0]), username: elem[1]} as Player) )
     this.game.rows = response.game.rows;
-    this.game.players = Object.entries(response.game.players).map(elem => ({id: elem[0], username: elem[1]}) )
+    let rows: Row[] = [];
+    let dartNum = 1;
+    // sort as the turns go
+    this.game.rows.forEach((row, rindex) => {
+      let rowModel: Row = new Row(row.id, []);
+      this.game.players.forEach((player) => {
+        this.game.rows[rindex].throwsList.forEach((uthrow) => {
+          if (player.id == uthrow.userId && uthrow.dartNumber == dartNum) {
+            let throwModel = new ThrowModel(uthrow.throwId, uthrow.dartNumber, uthrow.score, uthrow.userId);
+            rowModel.throwsList.push(throwModel);
+            dartNum++;
+          }
+        })
+        dartNum = 1;
+      })
+      rows.push(rowModel);
+    })
+    this.game.rows = rows;
     this.refreshCurrents();
   }
 
@@ -38,19 +63,12 @@ export class GameComponent {
   }
 
   addScore() {
-    
-  }
-
-  nextTurn() {
-    // if (this.activePlayer < this.players.length - 1) {
-    //   this.activePlayer++;
-    // } else {
-    //   this.activePlayer = 0;
-    //   this.currentRound++;
-    //   if (!this.rounds.includes(this.currentRound)) {
-    //     this.rounds.push(this.currentRound);
-    //   }
-    // }
+    const newRow: number = this.game.players.slice(-1)[0].id == this.activePlayer && this.currentDart === 3 ? 1 : 0;
+    this.gameService.userThrow(this.gameId, this.currentThrowId, this.currentThrow * this.multiplier, newRow).subscribe({
+      next: () => {
+        this.getState();
+      }
+    });
   }
 
   refreshCurrents() {
@@ -61,18 +79,20 @@ export class GameComponent {
         if (uthrow.score == -1 && !found) {
           found = true;
           this.currentDart = uthrow.dartNumber;
-          this.currentRound = j;
           this.activePlayer = uthrow.userId;
+          this.currentThrowId = uthrow.throwId;
         }
       }
+      this.currentRound = i;
     }
+    console.log(this);
   }
 
   sumScores(player: number, round: number): number {
-    let sum = 0;
+    let sum = 501;
     this.game.rows[round].throwsList?.forEach((value) => {
       if (value.userId == player) {
-        sum += value.score && value.score > 0 ? value.score : 0;
+        sum -= value.score && value.score > 0 ? value.score : 0;
       }
     });
     return sum;

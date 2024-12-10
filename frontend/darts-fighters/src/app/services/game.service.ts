@@ -9,6 +9,7 @@ export class GameService {
   private newGameUrl = 'api/game/new-game';
   private readyUrl = 'api/game/{gameId}/ready';
   private getGameUrl = 'api/game/{gameId}';
+  private userThrowUrl = 'api/game/{gameId}/throw';
 
   constructor(private http: HttpClient) { }
 
@@ -24,5 +25,9 @@ export class GameService {
 
   getGame(gameId: string): Observable<any> {
     return this.http.get(this.getGameUrl.replace("{gameId}", gameId));
+  }
+
+  userThrow(gameId: string, throwId: number, score: number, newRow: number): Observable<any> {
+    return this.http.post(this.userThrowUrl.replace("{gameId}", gameId), {"throwId" : throwId, "score": score, "newRow": newRow});
   }
 }

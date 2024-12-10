@@ -9,10 +9,10 @@
                 </tr>
             </thead>
             <tbody>
-                    <tr>
-                        @for (player of game.players; track player) {
-                            @for (row of game.rows; track row; let rowIndex = $index) {
-                                <td>
+                    @for (row of game.rows; track row; let rowIndex = $index) {
+                        <tr>
+                            @for (player of game.players; track player) {
+                                <td [class.active]="currentRound == rowIndex && activePlayer == player.id">
                                     @for (throw of game.rows[rowIndex].throwsList; track throw) {
                                         @if (player.id == throw.userId) {
                                             <span class="throw">{{ throw.score == -1 ? '-' : throw.score }};</span>
@@ -21,8 +21,8 @@
                                     => <span class="throw">{{ sumScores(player.id, rowIndex) < 0 ? '-' : sumScores(player.id, rowIndex) }}</span>
                                 </td>
                             }
-                        }
-                    </tr>
+                        </tr>
+                    }
             </tbody>
         </table>
     
