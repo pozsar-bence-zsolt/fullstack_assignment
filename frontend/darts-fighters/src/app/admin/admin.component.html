@@ -1,1 +1,30 @@
-<p>admin works!</p>
+<div class="table-container">
+    <h2>USERS</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Username</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (user of users; track user) {
+            <tr>
+                <td>{{ user.email }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.role }}</td>
+                <td>
+                    <div class="action-buttons">
+                        @if (user.role == 'user') {
+                            <button (click)="onPromote(user.id)">Promote</button>
+                        }
+                        <button (click)="onDelete(user.id)">Delete</button>
+                    </div>
+                </td>
+              </tr>
+        }
+      </tbody>
+    </table>
+  </div>

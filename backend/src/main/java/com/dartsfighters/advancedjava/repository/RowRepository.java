@@ -15,4 +15,7 @@ public interface RowRepository extends JpaRepository<Row, Integer> {
     @Query("SELECT r FROM Row r WHERE r.game.id = :gameId AND r.rowNumber = " +
         "(SELECT MAX(rt.rowNumber) FROM Row rt WHERE rt.game.id = :gameId)")
     Optional<Row> findMaxRowNumberByGameId(@Param("gameId") Integer gameId);
+
+    @Query("SELECT DISTINCT r FROM Row r LEFT JOIN r.throwsList t WHERE t.thrower.id = :userId")
+    List<Row> findRowsByUser(@Param("userId") Integer userId);
 }

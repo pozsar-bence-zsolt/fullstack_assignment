@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { GameService } from '../services/game.service';
-import { ActivatedRoute } from '@angular/router';
-import { Game, Player } from './model/game.model';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Game, nullPlayer, Player } from './model/game.model';
 import { firstValueFrom } from 'rxjs';
 import { Row } from './model/row.model';
 import { ThrowModel } from './model/throw.model';
@@ -24,7 +24,7 @@ export class GameComponent {
   game: Game = new Game();
   @Input() currentThrow: number = 0;
 
-  constructor(private route: ActivatedRoute, private gameService: GameService) {
+  constructor(private route: ActivatedRoute, private router: Router, private gameService: GameService) {
     this.gameId = this.route.snapshot.paramMap.get('id') ?? '';
   }
 
@@ -37,6 +37,7 @@ export class GameComponent {
     this.game.id = response.game.id;
     this.game.players = Object.entries(response.game.players).map(elem => ({id: parseInt(elem[0]), username: elem[1]} as Player) )
     this.game.rows = response.game.rows;
+    this.game.winner = response.game.winner;
     let rows: Row[] = [];
     let dartNum = 1;
     // sort as the turns go
@@ -62,10 +63,29 @@ export class GameComponent {
     this.multiplier = this.multiplier === multiplier ? 1 : multiplier;
   }
 
+  win(player: number) {
+    const playerObject: Player = this.game.players.find((elem) => elem.id === player) ?? nullPlayer;
+    this.gameService.winGame(this.gameId, playerObject.id).subscribe({
+      next: () => {
+        this.alertAndRedirect(playerObject);
+      }
+    });
+  }
+
+  alertAndRedirect(playerObject: Player) {
+    alert(playerObject.username + " won the game!");
+    this.router.navigate(['/menu']);
+  }
+
   addScore() {
     const newRow: number = this.game.players.slice(-1)[0].id == this.activePlayer && this.currentDart === 3 ? 1 : 0;
     this.gameService.userThrow(this.gameId, this.currentThrowId, this.currentThrow * this.multiplier, newRow).subscribe({
       next: () => {
+        this.console.log(this.activePlayer, this.currentRound, this.sumScores(this.activePlayer, this.currentRound));
+        if (this.sumScores(this.activePlayer, this.currentRound) - this.currentThrow <= 0) {
+          this.win(this.activePlayer);
+          return;
+        }
         this.getState();
       }
     });
@@ -85,16 +105,22 @@ export class GameComponent {
       }
       this.currentRound = i;
     }
-    console.log(this);
+    if (this.game.winner) {
+      const playerObject: Player = this.game.players.find((elem) => elem.id === this.activePlayer) ?? nullPlayer;
+      this.alertAndRedirect(playerObject);
+    }
   }
 
   sumScores(player: number, round: number): number {
     let sum = 501;
-    this.game.rows[round].throwsList?.forEach((value) => {
-      if (value.userId == player) {
-        sum -= value.score && value.score > 0 ? value.score : 0;
-      }
-    });
+    for (let i=0; i <= round; i++) {
+      this.game.rows[i].throwsList?.forEach((value) => {
+        if (value.userId == player) {
+          sum -= value.score && value.score > 0 ? value.score : 0;
+        }
+      });
+    }
+
     return sum;
   }
 }

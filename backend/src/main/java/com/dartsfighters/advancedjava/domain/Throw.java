@@ -39,7 +39,4 @@ public class Throw {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "thrower_id")
     private User thrower;
-
-
-
 }

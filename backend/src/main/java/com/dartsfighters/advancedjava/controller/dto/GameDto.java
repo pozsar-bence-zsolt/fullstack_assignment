@@ -14,6 +14,7 @@ public class GameDto {
     private Integer id;
     private List<RowDto> rows;
     private Map<Integer, String> players;
+    private Integer winner;
 
     public GameDto(Integer id, List<RowDto> rows, Map<Integer, String> players) {
         this.id = id;

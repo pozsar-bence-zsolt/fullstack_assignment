@@ -45,6 +45,13 @@ export class MainMenuComponent {
         this.router.navigate(['/lobby/' + response.game]);
       }
     })
+  }
 
+  onHistory() {
+    this.router.navigate(['/history']);
+  }
+
+  onUsers() {
+    this.router.navigate(['/admin']);
   }
 }

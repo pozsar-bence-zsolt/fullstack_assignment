@@ -57,7 +57,7 @@ public class GameController {
     @GetMapping("/{gameId}")
     public ResponseEntity<Map<String, GameDto>> getGame(@PathVariable("gameId") Integer gameId) {
         Map<String, GameDto> response = new HashMap<>();
-        Game game = this.gameRepository.findById(gameId).get();
+        Game game = this.gameRepository.getReferenceById(gameId);
         List<Row> rows = this.rowRepository.findByGameId(gameId);
         List<RowDto> rowDtos = new ArrayList<>();
         Map<Integer, String> playerDetails = new HashMap<>();
@@ -78,6 +78,9 @@ public class GameController {
         }
         
         GameDto gameDto = new GameDto(gameId, rowDtos, playerDetails);
+        if (game.getWinner() != null) {
+            gameDto.setWinner(game.getWinner().getId());
+        }
         response.put("game", gameDto);
         return ResponseEntity.ok(response);
     }
@@ -86,6 +89,10 @@ public class GameController {
     public ResponseEntity<Map<String, String>> readyGame(@PathVariable("gameId") Integer gameId, @RequestBody List<String> players) {
         Map<String, String> response = new HashMap<>();
         Game game = this.gameRepository.findById(gameId).get();
+        if (game.getStartTime() != null) {
+            response.put("message", "Game has already started!");
+            return ResponseEntity.status(404).body(response);
+        }
         game.setStartTime(LocalDateTime.now());
         gameRepository.save(game);
 
@@ -148,5 +155,17 @@ public class GameController {
         return ResponseEntity.ok(response);
     }
 
-    
+    @PostMapping("/{gameId}/win")
+    public ResponseEntity<Map<String, String>> winGame(@PathVariable("gameId") Integer gameId, @RequestBody HashMap<String, Integer> request) {
+        Map<String, String> response = new HashMap<>();
+        Integer playerId = request.get("winner");
+        User winner = this.userRepository.findById(playerId).get();
+        Game game = this.gameRepository.getReferenceById(gameId);
+        game.setWinner(winner);
+        game.setEndTime(LocalDateTime.now());
+        this.gameRepository.save(game);
+
+        response.put("message", "Winner saved successfully!");
+        return ResponseEntity.ok(response);
+    }
 }

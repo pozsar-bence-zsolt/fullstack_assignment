@@ -32,7 +32,7 @@
                 <button (click)="toggleMultiplier(2)" [class.active]="multiplier === 2">2X</button>
                 <button (click)="toggleMultiplier(3)" [class.active]="multiplier === 3">3X</button>
                 <span>{{ multiplier }}X</span>
-                <input type="number" [(ngModel)]="currentThrow" placeholder="Score" />
+                <input type="number" min="0" max="50" [(ngModel)]="currentThrow" />
                 <button (click)="addScore()">Add</button>
             </div>
         </div>

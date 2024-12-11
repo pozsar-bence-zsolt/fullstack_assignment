@@ -6,6 +6,7 @@ import { MainMenuComponent } from './main-menu/main-menu.component';
 import { LobbyComponent } from './lobby/lobby.component';
 import { GameComponent } from './game/game.component';
 import { AdminComponent } from './admin/admin.component';
+import { HistoryComponent } from './history/history.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -15,5 +16,6 @@ export const routes: Routes = [
     { path: 'lobby/:id', component: LobbyComponent },
     { path: 'game/:id', component: GameComponent },
     { path: 'admin', component: AdminComponent },
+    { path: 'history', component: HistoryComponent },
     { path: '**', component: PageNotFoundComponent },
 ];
