@@ -1,0 +1,9 @@
+<h2>Main Menu</h2>
+<div class="menu-container">
+    <button type="button" (click)="onNewGame()">New Game</button>
+    <button type="button" (click)="onHistory()">Previous Games</button>
+    @if (userRole == "ROLE_ADMIN") {
+        <button type="button" (click)="onUsers()">Registered Users</button>
+    }
+    <button type="button" (click)="onLogout()">Logout</button>
+</div>

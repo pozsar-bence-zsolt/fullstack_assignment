@@ -1,0 +1,33 @@
+server:
+    port : 6501
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+spring:
+  datasource:
+    url: jdbc:postgresql://posgres_database:5432/postgres #server run inside container
+    #url: jdbc:postgresql://localhost:6600/postgres #server run outside of container
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+        boot:
+          autoconfigure: INFO
+

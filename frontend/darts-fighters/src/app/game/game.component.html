@@ -1,0 +1,40 @@
+@if (game) {
+    <div class="game-container">
+        <table class="score-table">
+            <thead>
+                <tr>
+                    @for (player of game.players; track player) {
+                        <th>{{ player.username }}</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                    @for (row of game.rows; track row; let rowIndex = $index) {
+                        <tr>
+                            @for (player of game.players; track player) {
+                                <td [class.active]="currentRound == rowIndex && activePlayer == player.id">
+                                    @for (throw of game.rows[rowIndex].throwsList; track throw) {
+                                        @if (player.id == throw.userId) {
+                                            <span class="throw">{{ throw.score == -1 ? '-' : throw.score }};</span>
+                                        }
+                                    }
+                                    => <span class="throw">{{ sumScores(player.id, rowIndex) < 0 ? '-' : sumScores(player.id, rowIndex) }}</span>
+                                </td>
+                            }
+                        </tr>
+                    }
+            </tbody>
+        </table>
+    
+        <div class="controls">
+            <p>Round {{ currentRound + 1 }}</p>
+            <div class="input-controls">
+                <button (click)="toggleMultiplier(2)" [class.active]="multiplier === 2">2X</button>
+                <button (click)="toggleMultiplier(3)" [class.active]="multiplier === 3">3X</button>
+                <span>{{ multiplier }}X</span>
+                <input type="number" min="0" max="50" [(ngModel)]="currentThrow" />
+                <button (click)="addScore()">Add</button>
+            </div>
+        </div>
+    </div>
+}

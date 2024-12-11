@@ -1,0 +1,37 @@
+<div class="history-container">
+    <h2>HISTORY</h2>
+    @for (game of games; track game; let gameNumber = $index) {
+        <div class="game">
+            <h3>Game {{gameNumber + 1}}.</h3>
+            <p>Winner: {{ getPlayer(gameNumber, game.winner ?? 0) }}</p>
+            <table>
+                <thead>
+                <tr>
+                    <th></th>
+                    @for (player of game.players; track player) {
+                        <th>{{player.username}}</th>
+                    }
+                </tr>
+                </thead>
+                <tbody>
+                    @for (row of game.rows; track row; let rowNumber = $index) {
+                        <tr>
+                            <td>Round {{rowNumber + 1}}.</td>
+                            @for (player of game.players; track player) {
+                                <td>
+                                    @for (throw of game.rows[rowNumber].throwsList; track throw) {
+                                        @if (player.id == throw.userId) {
+                                            {{console.log(throw)}}
+                                            <span class="throw">{{ throw.score == -1 ? '-' : throw.score }};</span>
+                                        }
+                                    }
+                                    => <span class="throw">{{ sumScores(gameNumber, player.id, rowNumber) < 0 ? '0' : sumScores(gameNumber, player.id, rowNumber) }}</span>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
