@@ -4,12 +4,10 @@ WORKDIR /app
 
 COPY . .
 
-RUN npm install -g @angular/cli
-
 WORKDIR /app/darts-fighters
 
 RUN npm install
-RUN ng update @angular/cli @angular/core
+RUN npm install -g @angular/cli
 
 EXPOSE 49153
 EXPOSE 4200
