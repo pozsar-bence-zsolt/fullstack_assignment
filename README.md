@@ -35,6 +35,7 @@ Before running the project, make sure you have the following dependencies instal
    - **Frontend**: [http://localhost:6500](http://localhost:6500)
    - **Backend**: [http://localhost:6501](http://localhost:6501)
    - **Swagger UI**: [http://localhost:6501/swagger-ui/index.html](http://localhost:6501/swagger-ui/index.html)
+   - **PgAdmin**: [http://localhost:6503](http://localhost:6503)
 
 ### Stopping the Project
 To stop the running containers, press `Ctrl+C` in the terminal where `docker-compose up` is running or use:
